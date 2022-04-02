@@ -18,23 +18,39 @@ FOR_READ.append(srv_sock)
 BUFFER = {}
 CONNECTED_CLIENTS = []
 
+
+def delete_connected_client(rsock):
+    for index, c in enumerate(CONNECTED_CLIENTS):
+        if rsock == c:
+            del CONNECTED_CLIENTS[index]
+
+
+def send_message_to_clients(rsock):
+    data = rsock.recv(2048).decode()
+    # if client socket is closed
+    if not data:
+        delete_connected_client(rsock)
+    else:
+        print(data)
+    # send message to all clients but sender
+    for clientsock in CONNECTED_CLIENTS:
+        if rsock != clientsock:
+            clientsock.send(data.encode())
+
+
+def append_client():
+    client, addr = srv_sock.accept()
+    client.setblocking(False)
+    FOR_READ.append(client)
+    CONNECTED_CLIENTS.append(client)
+
+
 print("Server started")
+# main loop
 while True:
     R, W, ERR = select.select(FOR_READ, FOR_WRITE, FOR_READ)
     for r in R:
         if r is srv_sock:
-            client, addr = srv_sock.accept()
-            client.setblocking(False)
-            FOR_READ.append(client)
-            CONNECTED_CLIENTS.append(client)
+            append_client()
         else:
-            data = r.recv(2048).decode()
-            if not data:
-                for index, c in enumerate(CONNECTED_CLIENTS):
-                    if r == c:
-                        del CONNECTED_CLIENTS[index]
-            else:
-                print(data)
-            for c in CONNECTED_CLIENTS:
-                if r != c:
-                    c.send(data.encode())
+            send_message_to_clients(r)
