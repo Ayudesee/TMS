@@ -1,8 +1,9 @@
 import psutil
 from ..decorators.PCDecorators import save_to_file
+from ..interface.PCInterface import PCInterface
 
 
-class PCProcess:
+class PCProcess(PCInterface):
     def __init__(self):
         self.information = "user"
 

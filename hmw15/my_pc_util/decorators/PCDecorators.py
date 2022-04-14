@@ -5,7 +5,8 @@ def save_to_file(filename: str = "test.txt"):
     """
     decorator for saving given text in directory.\n
     decorated function should return list of strings that will be saved into the file\n
-    :argument filename should specify filepath
+    :arg filename
+        should specify filepath
     """
 
     def decorator(func):

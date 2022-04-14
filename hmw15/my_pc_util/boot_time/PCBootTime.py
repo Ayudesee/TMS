@@ -2,9 +2,10 @@ import datetime
 import time
 import psutil
 from ..decorators.PCDecorators import save_to_file
+from ..interface.PCInterface import PCInterface
 
 
-class PCBootTime:
+class PCBootTime(PCInterface):
     def __init__(self):
         self.boot_time: float = time.time() - psutil.boot_time()
 
@@ -12,7 +13,7 @@ class PCBootTime:
     def get(self) -> list:
         """return boot_time in days"""
         self.boot_time = time.time() - psutil.boot_time()
-        return [str(datetime.timedelta(seconds=self.boot_time))]
+        return [f"Boot time: " + str(datetime.timedelta(seconds=self.boot_time))]
 
     def show(self):
         """prints boot_time"""

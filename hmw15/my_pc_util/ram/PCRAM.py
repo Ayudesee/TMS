@@ -1,9 +1,10 @@
 import psutil
 from ..utility.PCUtility import PCPercentageBar
 from ..decorators.PCDecorators import save_to_file
+from ..interface.PCInterface import PCInterface
 
 
-class PCRAM:
+class PCRAM(PCInterface):
     def __init__(self):
         self.bar = PCPercentageBar()
 
